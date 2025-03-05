@@ -115,3 +115,18 @@ export const uploadImage = async (req: Request, res: Response) => {
         res.status(500).json({error: error.message});
     }   
 }
+
+export const getUserByHandle = async (req: Request, res: Response) => {
+    try {
+        const { handle } = req.params;
+        const user = await User.findOne({handle}).select('-_id -__v -email -password')
+        if (!user) {
+            const error = new Error('El usario no extiste');
+            res.status(404).json({error: error.message});
+        }
+        res.status(200).json(user)
+    } catch (err) {
+        const error = new Error('Halgo Salio mal obteniendo el usuario');
+        res.status(500).json({error: error.message});
+    }
+}
